@@ -16,7 +16,11 @@ class Program
         
         var deposanten = faker.Generate(10);
 
-        
+        foreach(var deposant in deposanten)
+        {
+            Console.WriteLine($"Deposant \t {deposant.FirstName} \t {deposant.LastName}");
+            //Console.WriteLine($"Deposant \t {deposant.FirstName} \t {deposant.LastName} \t {deposant.Bsn}");
+        }
         
         //var summary = BenchmarkRunner.Run<BenchMarkDemo>();
         //var summary = BenchmarkRunner.Run<BenchMarkFrozenSetsDic>();

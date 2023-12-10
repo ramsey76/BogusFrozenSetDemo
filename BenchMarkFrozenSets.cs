@@ -7,6 +7,9 @@ using System.Collections.ObjectModel;
 namespace benchmark;
 
 [MemoryDiagnoser]
+/*
+Check that Country code in Deposant is in List of CountryCodes
+*/
 public class BenchMarkFrozenSets
 {
     private List<string> listOfCountryCodes = new List<string>();
@@ -20,12 +23,16 @@ public class BenchMarkFrozenSets
     [GlobalSetup]
     public void GlobalSetup()
     {
-        List<CountryCode> countryCodes = CountryCodesGenerator.Generate();
+        //Get List of CountryCodes
+        var countryCodes = CountryCodesGenerator.Generate();
+        //List of Strings
         listOfCountryCodes = countryCodes.Select(cc => cc.Alpha3).ToList();
 
+        //Generate Deposanten
         var faker = Faker.GetDeposantGenerator(listOfCountryCodes);
-        listOfDeposanten = faker.Generate(1000000);
+        listOfDeposanten = faker.Generate(1000000); // 1.000.000
 
+        //Generate Lists that are used in BenchMarking
         frozenSetOfCountryCodes = listOfCountryCodes.ToFrozenSet();
         hashSetOfCountryCodes = listOfCountryCodes.ToHashSet();
         readonlyListOfCountryCodes = listOfCountryCodes.AsReadOnly();

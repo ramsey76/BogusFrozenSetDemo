@@ -9,6 +9,9 @@ using System.Collections.Immutable;
 namespace benchmark;
 
 [MemoryDiagnoser]
+/*
+Search 3 letter CountryCode in List and find Name
+*/
 public class BenchMarkFrozenSetsDic
 {
     private Dictionary<string, string> listOfCountryCodesDics;
@@ -22,15 +25,13 @@ public class BenchMarkFrozenSetsDic
     [GlobalSetup]
     public void GlobalSetup()
     {
-        var fileName = "Data/all.json";
-        var jsonAsString = File.ReadAllText(fileName);
-
-        var countryCodes = JsonSerializer.Deserialize<List<CountryCode>>(jsonAsString)!;
+        var countryCodes = CountryCodesGenerator.Generate();
         listOfCountryCodesDics = countryCodes.ToDictionary(cc => cc.Alpha3, cc => cc.Name);
 
         var faker = Faker.GetDeposantGenerator(countryCodes.Select(c => c.Alpha3).ToList());
-        listOfDeposanten = faker.Generate(1000000);
+        listOfDeposanten = faker.Generate(1000000); // 1.000.000
 
+        //Generate lists that are used in Benchmarking        
         frozenSetOfCountryCodes = listOfCountryCodesDics.ToFrozenDictionary();
         dictionaryOfCountryCodes = listOfCountryCodesDics;
         immutableDicOfCountryCodes = listOfCountryCodesDics.ToImmutableDictionary();

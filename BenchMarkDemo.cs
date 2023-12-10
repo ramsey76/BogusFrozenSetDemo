@@ -29,6 +29,8 @@ public class BenchMarkDemo
         {
             list.Add($"Hello World {i}");
         }
+#pragma warning disable CS8603 // Possible null reference return.
         return list.ToString();
+#pragma warning restore CS8603 // Possible null reference return.
     }
 }

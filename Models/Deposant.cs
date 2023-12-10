@@ -7,4 +7,5 @@ public class Deposant
     public required string LastName {get;set;}
     public required string Email {get;set;}
     public required string CountryCode {get;set;}
+    public required string Bsn {get;set;}
 }
