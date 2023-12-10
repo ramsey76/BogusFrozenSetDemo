@@ -3,10 +3,11 @@ using Benchmark.Models;
 using System.Text.Json;
 using System.Collections.Frozen;
 using System.Collections.ObjectModel;
+using BenchmarkDotNet.Order;
 
 namespace benchmark;
 
-[MemoryDiagnoser]
+[MemoryDiagnoser, RankColumn, Orderer(SummaryOrderPolicy.FastestToSlowest)]
 /*
 Check that Country code in Deposant is in List of CountryCodes
 */
@@ -39,15 +40,6 @@ public class BenchMarkFrozenSets
     }
 
     [Benchmark]
-    public void CheckCountryCodeAgainstFrozenSet()
-    {
-        foreach(var deposant in listOfDeposanten)
-        {
-            frozenSetOfCountryCodes.Contains(deposant.CountryCode);
-        }
-    }
-
-    [Benchmark]
     public void CheckCountryCodeAgainstHashSet()
     {
         foreach(var deposant in listOfDeposanten)
@@ -66,4 +58,12 @@ public class BenchMarkFrozenSets
         }
     }
 
+    [Benchmark]
+    public void CheckCountryCodeAgainstFrozenSet()
+    {
+        foreach(var deposant in listOfDeposanten)
+        {
+            frozenSetOfCountryCodes.Contains(deposant.CountryCode);
+        }
+    }
 }

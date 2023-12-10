@@ -5,10 +5,11 @@ using System.Collections.Frozen;
 using System.Collections.ObjectModel;
 using Microsoft.Diagnostics.Runtime.DacInterface;
 using System.Collections.Immutable;
+using BenchmarkDotNet.Order;
 
 namespace benchmark;
 
-[MemoryDiagnoser]
+[MemoryDiagnoser, RankColumn, Orderer(SummaryOrderPolicy.FastestToSlowest)]
 /*
 Search 3 letter CountryCode in List and find Name
 */
@@ -29,21 +30,12 @@ public class BenchMarkFrozenSetsDic
         listOfCountryCodesDics = countryCodes.ToDictionary(cc => cc.Alpha3, cc => cc.Name);
 
         var faker = Faker.GetDeposantGenerator(countryCodes.Select(c => c.Alpha3).ToList());
-        listOfDeposanten = faker.Generate(1000000); // 1.000.000
+        listOfDeposanten = faker.Generate(5000000); // 1.000.000
 
         //Generate lists that are used in Benchmarking        
         frozenSetOfCountryCodes = listOfCountryCodesDics.ToFrozenDictionary();
         dictionaryOfCountryCodes = listOfCountryCodesDics;
         immutableDicOfCountryCodes = listOfCountryCodesDics.ToImmutableDictionary();
-    }
-
-    [Benchmark]
-    public void CheckCountryCodeAgainstFrozenSet()
-    {
-        foreach(var deposant in listOfDeposanten)
-        {
-            frozenSetOfCountryCodes.TryGetValue(deposant.CountryCode, out string country);
-        }
     }
 
     [Benchmark]
@@ -65,4 +57,12 @@ public class BenchMarkFrozenSetsDic
         }
     }
 
+    [Benchmark]
+    public void CheckCountryCodeAgainstFrozenSet()
+    {
+        foreach(var deposant in listOfDeposanten)
+        {
+            frozenSetOfCountryCodes.TryGetValue(deposant.CountryCode, out string country);
+        }
+    }
 }
