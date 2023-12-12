@@ -30,18 +30,19 @@ public class BenchMarkFrozenSetsDic
         listOfCountryCodesDics = countryCodes.ToDictionary(cc => cc.Alpha3, cc => cc.Name);
 
         var faker = Faker.GetDeposantGenerator(countryCodes.Select(c => c.Alpha3).ToList());
-        listOfDeposanten = faker.Generate(5000000); // 1.000.000
+        listOfDeposanten = faker.Generate(1000000); // 1.000.000
 
         //Generate lists that are used in Benchmarking        
-        frozenSetOfCountryCodes = listOfCountryCodesDics.ToFrozenDictionary();
         dictionaryOfCountryCodes = listOfCountryCodesDics;
         immutableDicOfCountryCodes = listOfCountryCodesDics.ToImmutableDictionary();
+        frozenSetOfCountryCodes = listOfCountryCodesDics.ToFrozenDictionary();
     }
 
     [Benchmark]
     public void CheckCountryCodeAgainstDictionary()
     {
-        foreach(var deposant in listOfDeposanten)
+        
+        foreach (var deposant in listOfDeposanten)
         {
             dictionaryOfCountryCodes.TryGetValue(deposant.CountryCode, out string country);
         }
@@ -49,9 +50,10 @@ public class BenchMarkFrozenSetsDic
     }
     
     [Benchmark]
-    public void CheckCountryCodeAgainstReadonlyList()
+    public void CheckCountryCodeAgainstImmutableDictionary()
     {
-        foreach(var deposant in listOfDeposanten)
+        
+        foreach (var deposant in listOfDeposanten)
         {
             immutableDicOfCountryCodes.TryGetValue(deposant.CountryCode, out string country);
         }
@@ -60,7 +62,8 @@ public class BenchMarkFrozenSetsDic
     [Benchmark]
     public void CheckCountryCodeAgainstFrozenSet()
     {
-        foreach(var deposant in listOfDeposanten)
+        
+        foreach (var deposant in listOfDeposanten)
         {
             frozenSetOfCountryCodes.TryGetValue(deposant.CountryCode, out string country);
         }
